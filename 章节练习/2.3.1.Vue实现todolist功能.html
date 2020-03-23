@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todolist</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue">
+        <button v-on:click="handleBtnClick">提交</button>
+        <ul>
+            <!-- 循环data中的list数据，循环的每一项放在item里面 -->
+            <li v-for="item in list">{{item}}</li>
+        </ul>
+        <pre>{{inputValue}}</pre>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list:[],
+                inputValue:''
+            },
+            methods:{
+                handleBtnClick: function(){
+                     this.list.push(this.inputValue)
+                     this.inputValue = ''
+                }
+            }
+        })
+    </script>
+</body>
+</html>
