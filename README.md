@@ -1,2 +1,3 @@
 # Vue去哪儿网项目
-Vue2.5
+
+[课程地址](https://coding.imooc.com/class/203.html)
