@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>去哪儿</title>
+    <title>Vue hello world</title>
 </head>
 <body>
+    <!-- {{}} 差值表达式 -->
     <div id="app">{{content}}</div>
     <script src="../static/vue/vue.js"></script>
     <script>
-        var app = new Vue({
-            el:"#app",
-            data:{
+        var app = new Vue({ // vue 实例
+            el:"#app",      // 实例管理的区域
+            data:{          // 定义数据
                 content:"hello world"
             }
         })
+        // setTimeout(function(){
+        //     app.$data.content = "bye world"
+        // },2000)
     </script>
 </body>
 </html>

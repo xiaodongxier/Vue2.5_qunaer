@@ -53,29 +53,36 @@ Vue **不支持** IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的
     <title>去哪儿</title>
 </head>
 <body>
+    <!-- {{}} 差值表达式 -->
     <div id="app">{{content}}</div>
     <script src="../static/vue/vue.js"></script>
     <script>
-        var app = new Vue({
-            el:"#app",
-            data:{
+        var app = new Vue({ // vue 实例
+            el:"#app",      // 实例管理的区域
+            data:{          // 定义数据
                 content:"hello world"
             }
         })
+        // setTimeout(function(){
+        //     app.$data.content = "bye world"
+        // },2000)
     </script>
 </body>
 </html>
 ```
 
+> vue书写代码，无需在把时间放在DOM操作上面，只需关注数据即可。
+
+## 2.3 开发TodoList（v\-model、v\-for、v\-on）
+
+> [案例参考](http://todolist.cn/):http://todolist.cn
 
 
 
-
-
-
-
-
-
+循环数据：v-for
+绑定事件：v-on
+方法定义在 vue 实例的 methods 里面
+数据双向绑定：v-model
 
 
 
