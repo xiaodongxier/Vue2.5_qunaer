@@ -77,17 +77,57 @@ Vue **不支持** IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的
 
 > [案例参考](http://todolist.cn/):http://todolist.cn
 
-
+使用到的指令
 
 循环数据：v-for
 绑定事件：v-on
 方法定义在 vue 实例的 methods 里面
 数据双向绑定：v-model
 
+app.$data.inputValue
+
+MVVM 设计方式
 
 
 
+**效果的实现**
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todolist</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue">
+        <button v-on:click="handleBtnClick">提交</button>
+        <ul>
+            <!-- 循环data中的list数据，循环的每一项放在item里面 -->
+            <li v-for="item in list">{{item}}</li>
+        </ul>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list:[],
+                inputValue:''
+            },
+            methods:{
+                handleBtnClick: function(){
+                     this.list.push(this.inputValue)
+                     this.inputValue = ''
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
 
 
