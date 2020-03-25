@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery todolist</title>
+    <script src="../static/jquery/jquery.min.js"></script>
+</head>
+<body>
+    <input type="" id="input">
+    <button id="btn">提交</button>
+    <ul id="ulElement"></ul>
+    <script>
+        function Page(){}
+        $.extend(Page.prototype,{   // $.extend
+            init: function(){
+                this.bindEvents()
+            },
+            bindEvents: function(){
+                var btn = $("#btn");
+                btn.on("click",$.proxy(this.handleBtnClick,this))   // $.proxy
+            },
+            handleBtnClick:function(){
+                var inputValue = $("#input");
+                var ulElement = $("#ulElement");
+                ulElement.append(`<li>${inputValue.val()}</li>`)
+                inputValue.val("")
+            }
+        })
+        var page = new Page()
+        page.init()
+        console.log(page)
+    </script>
+</body>
+</html>
