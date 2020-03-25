@@ -76,13 +76,116 @@ Vue **不支持** IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的
 ## 2.3 开发TodoList（v\-model、v\-for、v\-on）
 
 > [案例参考](http://todolist.cn/):http://todolist.cn
+> 用到的指令：`v-for`、`v-on`、`v-model` 
 
-使用到的指令
+### [循环数据：v-for](https://cn.vuejs.org/v2/guide/#%E6%9D%A1%E4%BB%B6%E4%B8%8E%E5%BE%AA%E7%8E%AF)
 
-循环数据：v-for
-绑定事件：v-on
+> v-for 指令可以绑定数组的数据来渲染一个项目列表
+
+```html
+<div id="app-4">
+  <ol>
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
+  </ol>
+</div>
+```
+
+```javascript
+var app4 = new Vue({
+  el: '#app-4',
+  data: {
+    todos: [
+      { text: '学习 JavaScript' },
+      { text: '学习 Vue' },
+      { text: '整个牛项目' }
+    ]
+  }
+})
+```
+
+输出结果：
+```
+1. 学习 JavaScript
+2. 学习 Vue
+3. 整个牛项目
+```
+
+
+### [绑定事件：v-on](https://cn.vuejs.org/v2/guide/#%E5%A4%84%E7%90%86%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5)
+
+> 处理用户输入
+> 为了让用户和你的应用进行交互，我们可以用 v-on 指令添加一个事件监听器，通过它调用在 Vue 实例中定义的方法：
+
+```html
+<div id="app-5">
+  <p>{{ message }}</p>
+  <button v-on:click="reverseMessage">反转消息</button>
+</div>
+```
+
+```javascript
+var app5 = new Vue({
+  el: '#app-5',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('')
+    }
+  }
+})
+```
+
+点击后输出结果：
+```
+!sj.euV olleH
+```
+
+注意在 `reverseMessage` 方法中，我们更新了应用的状态，但没有触碰 DOM——所有的 DOM 操作都由 Vue 来处理，你编写的代码只需要关注逻辑层面即可。
+
+### [数据双向绑定：v-model](https://cn.vuejs.org/v2/guide/#%E5%A4%84%E7%90%86%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5)
+
+> Vue 还提供了 `v-model` 指令，它能轻松实现表单输入和应用状态之间的双向绑定。
+
+
+```html
+<div id="app-6">
+  <p>{{ message }}</p>
+  <input v-model="message">
+</div>
+```
+
+```javascript
+var app6 = new Vue({
+  el: '#app-6',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 方法定义在 vue 实例的 methods 里面
-数据双向绑定：v-model
+
 
 app.$data.inputValue
 
