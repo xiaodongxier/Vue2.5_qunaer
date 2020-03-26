@@ -334,16 +334,239 @@ MVVM 设计模式
 
 > 每一个组件就是页面上的一个区域
 
-## 2.6 使用组件化思想修改 TodoList
+## 2.6 [使用组件化思想修改 TodoList](https://cn.vuejs.org/v2/guide/components.html?#%E7%BB%84%E4%BB%B6%E7%9A%84%E7%BB%84%E7%BB%87)
 
-### 全局组件使用 
+> 因为组件是可复用的 Vue 实例，所以它们与 `new Vue` 接收相同的选项，例如 `data`、`computed`、`watch`、`methods` 以及生命周期钩子等。仅有的例外是像 `el` 这样根实例特有的选项。
 
-### 数据传递
+通常一个应用会以一棵嵌套的组件树的形式来组织：
 
-v-bind
-props
+![Component Tree](https://cn.vuejs.org/images/components.png)
 
-## 局部组件使用
-注册使用
+例如，你可能会有页头、侧边栏、内容区等组件，每个组件又包含了其它的像导航链接、博文之类的组件。
+
+为了能在模板中使用，这些组件必须先注册以便 Vue 能够识别。这里有两种组件的注册类型：**全局注册**和**局部注册**。至此，我们的组件都只是通过 `Vue.component` 全局注册的：
+
+```
+Vue.component('my-component-name', {
+  // ... options ...
+})
+```
+
+全局注册的组件可以用在其被注册之后的任何 (通过 `new Vue`) 新创建的 Vue 根实例，也包括其组件树中的所有子组件的模板中。
+
+到目前为止，关于组件注册你需要了解的就这些了，如果你阅读完本页内容并掌握了它的内容，我们会推荐你再回来把[组件注册](https://cn.vuejs.org/v2/guide/components-registration.html)读完。
+
+
+### 2.6.1 [全局组件使用](https://cn.vuejs.org/v2/guide/components.html#%E5%9F%BA%E6%9C%AC%E7%A4%BA%E4%BE%8B) 
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todolist</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue">
+        <button v-on:click="handleBtnClick">提交</button>
+        <ul>
+            <todo-item v-bind:content="item" v-for="item in list"></todo-item>
+        </ul>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        // 全局组件，可以直接在模板里使用
+        Vue.component("TodoItem",{
+            props:['content'],
+            template:"<li>{{content}}</li>"    // 模板里面用插值表达式
+        })
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list:[],
+                inputValue:''
+            },
+            methods:{
+                handleBtnClick: function(){
+                     this.list.push(this.inputValue)
+                     this.inputValue = ''
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+### 2.6.2 [数据传递](https://cn.vuejs.org/v2/guide/components.html#%E9%80%9A%E8%BF%87-Prop-%E5%90%91%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE)
+
+> [Prop](https://cn.vuejs.org/v2/guide/components-props.html) 是你可以在组件上注册的一些自定义 attribute。当一个值传递给一个 prop attribute 的时候，它就变成了那个组件实例的一个属性。
+> 一个组件默认可以拥有任意数量的 [prop](https://cn.vuejs.org/v2/guide/components-props.html)，任何值都可以传递给任何 [prop](https://cn.vuejs.org/v2/guide/components-props.html)。
+> v-bind -->子组件传入绑定值
+
+
+
+### 2.6.3 局部组件使用
+
+[组件注册](https://cn.vuejs.org/v2/guide/components-registration.html)
+
+**全局注册**
+
+到目前为止，我们只用过 `Vue.component` 来创建组件：
+
+```
+Vue.component('my-component-name', {
+  // ... 选项 ...
+})
+```
+
+这些组件是**全局注册的**。也就是说它们在注册之后可以用在任何新创建的 Vue 根实例 (`new Vue`) 的模板中。比如：
+
+```
+Vue.component('component-a', { /* ... */ })
+Vue.component('component-b', { /* ... */ })
+Vue.component('component-c', { /* ... */ })
+
+new Vue({ el: '#app' })
+```
+
+```
+<div id="app">
+  <component-a></component-a>
+  <component-b></component-b>
+  <component-c></component-c>
+</div>
+```
+
+在所有子组件中也是如此，也就是说这三个组件*在各自内部*也都可以相互使用。
+
+**局部注册**
+
+全局注册往往是不够理想的。比如，如果你使用一个像 webpack 这样的构建系统，全局注册所有的组件意味着即便你已经不再使用一个组件了，它仍然会被包含在你最终的构建结果中。这造成了用户下载的 JavaScript 的无谓的增加。
+
+在这些情况下，你可以通过一个普通的 JavaScript 对象来定义组件：
+
+```
+var ComponentA = { /* ... */ }
+var ComponentB = { /* ... */ }
+var ComponentC = { /* ... */ }
+```
+
+然后在 `components` 选项中定义你想要使用的组件：
+
+```
+new Vue({
+  el: '#app',
+  components: {
+    'component-a': ComponentA,
+    'component-b': ComponentB
+  }
+})
+```
+
+对于 `components` 对象中的每个属性来说，其属性名就是自定义元素的名字，其属性值就是这个组件的选项对象。
+
+注意**局部注册的组件在其子组件中*不可用***。例如，如果你希望 `ComponentA` 在 `ComponentB` 中可用，则你需要这样写：
+
+```
+var ComponentA = { /* ... */ }
+
+var ComponentB = {
+  components: {
+    'component-a': ComponentA
+  },
+  // ...
+}
+```
+
+或者如果你通过 Babel 和 webpack 使用 ES2015 模块，那么代码看起来更像：
+
+```
+import ComponentA from './ComponentA.vue'
+
+export default {
+  components: {
+    ComponentA
+  },
+  // ...
+}
+```
+
+注意在 ES2015+ 中，在对象中放一个类似 `ComponentA` 的变量名其实是 `ComponentA: ComponentA` 的缩写，即这个变量名同时是：
+
+*   用在模板中的自定义元素的名称
+*   包含了这个组件选项的变量名
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todolist</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue" maxlength="11">
+        <button v-on:click="handleBtnClick">提交</button>
+        <ul>
+            <todo-item 
+                v-bind:content="item" 
+                v-for="item in list">
+            </todo-item>
+        </ul>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        // 局部组件，需要注册才能正常使用
+        var TodoItem = {
+            props:['content'],
+            template:"<li>{{content}}</li>"    // 模板里面用插值表达式
+        }
+        var app = new Vue({
+            el:"#app",
+            components: {
+                TodoItem:TodoItem
+            },
+            data: {
+                list:[],
+                inputValue:''
+            },
+            methods:{
+                handleBtnClick: function(){
+                     this.list.push(this.inputValue)
+                     this.inputValue = ''
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+## 2.7 简单的组件间传值
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
