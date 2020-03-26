@@ -549,6 +549,160 @@ export default {
 
 ## 2.7 简单的组件间传值
 
+> 本节的几个关键字  `index`， `$emit`，`v-bind`
+
+### 2.7.1 父组件向子组件传值
+
+> 通过 v-bind 方式进行数据的传递，
+> 父组件可以使用 props 把数据传给子组件。子组件通过 props 进行接收
+
+
+
+### 2.7.2 子组件向父组件传值
+
+> 子组件可以使用 $emit 触发父组件的自定义事件。
+> 通过事件触发，向上一层触发事件
+> 子组件触发的事件，恰好父组件在监听，然后带出子组件传递出来的内容
+
+```javascript
+vm.$emit( event, arg )  //触发当前实例上的事件
+vm.$on( event, fn );    //监听event事件后运行 fn； 
+```
+
+子传父案例（点击删除 list）
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>子组件向父组件传值</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue">
+        <button v-on:click="handleBtnClick">提交</button>
+        <ul>
+            <todo-item 
+                v-bind:content="item" 
+                v-bind:index="index"
+                v-for="(item,index) in list"
+                v-on:delete="handleBtnDelete">
+            </todo-item>
+        </ul>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var TodoItem = {
+            props:['content','index'],
+            template:"<li @click='handleItemClick'>{{content}}</li>",
+            methods: {
+                handleItemClick: function() {
+                    this.$emit("delete",this.index)
+                }
+            }
+        }
+        var app = new Vue({
+            el:"#app",
+            components: {
+                TodoItem:TodoItem
+            },
+            data: {
+                list:[],
+                inputValue:''
+            },
+            methods:{
+                handleBtnClick: function(){
+                     this.list.push(this.inputValue)
+                     this.inputValue = ''
+                },
+                handleBtnDelete: function(index){
+                     this.list.splice(index,1)
+                    // console.log(idnex) 会报错是为什么呢？
+                }
+            }
+        })
+    </script>
+</body>
+</html> 
+```
+
+**疑问：**关于 index 打印报错是为什么呢？alert能正确弹出下标，但是 console.log 却报错是为什么呢？
+
+![](http://oss.xiaodongxier.com/blog/notes/image/15852321164158.jpg?imageView2/0/interlace/1/q/70|watermark/2/text/eGlhb2Rvbmd4aWVyLmNvbQ==/font/YXJpYWw=/fontsize/600/fill/IzUxQURFRA==/dissolve/100/gravity/SouthEast/dx/0/dy/0)
+
+
+### 2.7.3 v-bind简写
+
+> `v-bind:content="item" ` == `:content="item"`
+
+```javascript
+<todo-item v-bind:content="item"></todo-item>
+```
+
+等同于
+
+```javascript
+<todo-item :content="item"></todo-item>
+```
+
+## 2.8 本章小结
+
+### 2.8.1 总结
+
+> v-model  v-bind(简写：':')  v-on(简写：'@')  v-for 
+
+ 1. 数据双向绑定
+ 2. 父子组件传值
+ 3. todolist
+
+
+### 2.8.1 补充学习
+
+> 阅读理解官网 [介绍](https://cn.vuejs.org/v2/guide/index.html) 部分内容
+
+**条件**
+
+控制切换一个元素是否显示也相当简单：
+
+```javascript
+<div id="app-3">
+  <p v-if="seen">现在你看到我了</p>
+</div>
+```
+
+```javascript
+var app3 = new Vue({
+  el: '#app-3',
+  data: {
+    seen: true
+  }
+})
+```
+
+继续在控制台输入 `app3.seen = false`，你会发现之前显示的消息消失了。
+
+这个例子演示了我们不仅可以把数据绑定到 DOM 文本或 attribute，还可以绑定到 DOM **结构**。此外，Vue 也提供一个强大的过渡效果系统，可以在 Vue 插入/更新/移除元素时自动应用[过渡效果](https://cn.vuejs.org/v2/guide/transitions.html)。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

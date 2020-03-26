@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>子组件向父组件传值</title>
+</head>
+<body>
+    <div id="app">
+       <span v-if="show">{{cont}}</span>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                cont:"hello world",
+                show: false   // 类似 display:none 页面中移除了 DOM 结构
+            }
+        })
+    </script>
+</body>
+</html> 
