@@ -208,7 +208,13 @@ new Vue({
 
 ## 3.3 [Vue的模版语法](https://cn.vuejs.org/v2/guide/syntax.html)
 
+> 视频部分
 
+1. 插值表达式  {{}}
+2. v-text=""    
+3.  
+
+> 官网文档部分
 
 
 
