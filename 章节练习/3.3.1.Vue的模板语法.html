@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue的模板语法</title>
-    <!-- Veujs Framwork js cdn -->
 </head>
 <body>
-    <div id="app">{{mess}}</div>
-
-    <script src="./static/vue/vue.js"></script>
+    <div id="app">
+        <div>{{name == 'Dell' ? 1 : 2}}</div>
+        <div v-text="name + ' hello'"></div>
+        <div v-html="name + ' hello'"></div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
     <script>
-        var app = new Vue({
+        var vm = new Vue({
             el:"#app",
             data: {
-                mess: "test",
-                seen: false
+                name: "Dell"
             }
         })
     </script>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>侦听器</title>
+</head>
+<body>
+    <div id="app">
+        {{fullName}}
+        {{age}}
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                firstName:"Wang",
+                lastName: "Yongjie",
+                fullName: "WangYongjie",
+                age: 28
+            },
+            watch: {
+                firstName: function(){
+                    console.log("计算了一次 1")
+                    this.fullName = this.firstName + '' + this.lastName
+                },
+                lastName: function(){
+                    console.log("计算了一次 2")
+                    this.fullName = this.firstName + '' + this.lastName
+                }
+            }
+        })
+    </script>
+</body>
+</html>
