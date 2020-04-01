@@ -425,7 +425,7 @@ Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使�
 
 ### 3.4.1 计算属性
 
-> 视频教程
+> #### 视频教程
 
 > 计算属性 computed 有一个缓存的机制
 
@@ -563,111 +563,277 @@ Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使�
 > 如果一个功能可以通过以上的三种方法实现，优先推荐使用 computed 进行实现。
 > 因为该方法代码不仅简洁，同时性能又高
 
+> #### 官方文档教程，详细讲解点击 [这里](https://cn.vuejs.org/v2/guide/computed.html)
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 3.5 计算属性的 getter 和 setter
 
+fullName 首先会去 data 里面进行寻找，如果找不到再去 computed 里面去找
 
+``` html
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算属性的getter和setter</title>
+</head>
+<body>
+    <div id="app">
+        {{fullName}}
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                firstName: "Dell",
+                lastName: "Lee"
+            },
+            // computed: {
+            //     fullName: function(){
+            //         return this.firstName + ' ' + this.lastName
+            //     }
+            // },
+            // computed 依赖的值发生变化的时候才会重新计算
+            computed: {
+                fullName: {
+                    get: function(){
+                        return this.firstName + ' ' + this.lastName
+                        console.log("取值的时候执行")
+                    },
+                    // set 能够接受外部传入的 Value
+                    set: function(value){
+                        var arr = value.split(" ");
+                        this.firstName = arr[0]
+                        this.lastName = arr[1]
+                        console.log(value)
+                        console.log("设置 fullName 值的时候执行")
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
+通过本节例子理解 computed 计算属性上不仅可以使用 get 的方法通过其他值算出一个新值。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+同时还可以使用 set 方法，通过设置一个值，来改变他相关联的值，又会引起 fullName 的重新计算，页面也会跟着变化成新的内容。
 
 ## 3.6 Vue中的样式绑定
 
+### 3.6.1 [绑定 HTML Class](https://cn.vuejs.org/v2/guide/class-and-style.html)
+
+#### [1. 对象语法](#对象语法 "对象语法")
+
+我们可以传给 `v-bind:class` 一个对象，以动态地切换 class：
+
+```javascript
+<div v-bind:class="{ active: isActive }"></div>
+```
+
+上面的语法表示 `active` 这个 class 存在与否将取决于数据属性 `isActive` 的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy)。
+
+你可以在对象中传入更多属性来动态切换多个 class。此外，`v-bind:class` 指令也可以与普通的 class 属性共存。当有如下模板：
+
+```javascript
+<div
+  class="static"
+  v-bind:class="{ active: isActive, 'text-danger': hasError }"
+></div>
+```
+
+和如下 data：
+
+```javascript
+data: {
+  isActive: true,
+  hasError: false
+}
+```
+
+结果渲染为：
+
+```javascript
+<div class="static active"></div>
+```
+
+当 `isActive` 或者 `hasError` 变化时，class 列表将相应地更新。例如，如果 `hasError` 的值为 `true`，class 列表将变为 `"static active text-danger"`。
+
+绑定的数据对象不必内联定义在模板里：
+
+```javascript
+<div v-bind:class="classObject"></div>
+```
+
+```javascript
+data: {
+  classObject: {
+    active: true,
+    'text-danger': false
+  }
+}
+```
+
+渲染的结果和上面一样。我们也可以在这里绑定一个返回对象的[计算属性](computed.html)。这是一个常用且强大的模式：
+
+```javascript
+<div v-bind:class="classObject"></div>
+```
+
+```javascript
+data: {
+  isActive: true,
+  error: null
+},
+computed: {
+  classObject: function () {
+    return {
+      active: this.isActive && !this.error,
+      'text-danger': this.error && this.error.type === 'fatal'
+    }
+  }
+}
+```
+
+#### [2. 数组语法](#数组语法 "数组语法")
+
+我们可以把一个数组传给 `v-bind:class`，以应用一个 class 列表：
+
+```javascript
+<div v-bind:class="[activeClass, errorClass]"></div>
+```
+
+```javascript
+data: {
+  activeClass: 'active',
+  errorClass: 'text-danger'
+}
+```
+
+渲染为：
+
+```javascript
+<div class="active text-danger"></div>
+```
+
+如果你也想根据条件切换列表中的 class，可以用三元表达式：
+
+```javascript
+<div v-bind:class="[isActive ? activeClass : '', errorClass]"></div>
+```
+
+这样写将始终添加 `errorClass`，但是只有在 `isActive` 是 truthy[\[1\]](#footnote-1) 时才添加 `activeClass`。
+
+不过，当有多个条件 class 时这样写有些繁琐。所以在数组语法中也可以使用对象语法：
+
+```javascript
+<div v-bind:class="[{ active: isActive }, errorClass]"></div>
+```
+
+#### [3. 用在组件上](#用在组件上 "用在组件上")
+
+> 这个章节假设你已经对 [Vue 组件](components.html)有一定的了解。当然你也可以先跳过这里，稍后再回过头来看。
+
+当在一个自定义组件上使用 `class` 属性时，这些 class 将被添加到该组件的根元素上面。这个元素上已经存在的 class 不会被覆盖。
+
+例如，如果你声明了这个组件：
+
+```javascript
+Vue.component('my-component', {
+  template: '<p class="foo bar">Hi</p>'
+})
+```
+
+然后在使用它的时候添加一些 class：
+
+```javascript
+<my-component class="baz boo"></my-component>
+```
+
+HTML 将被渲染为：
+
+```javascript
+<p class="foo bar baz boo">Hi</p>
+```
+
+对于带数据绑定 class 也同样适用：
+
+```javascript
+<my-component v-bind:class="{ active: isActive }"></my-component>
+```
+
+当 `isActive` 为 truthy[\[1\]](#footnote-1) 时，HTML 将被渲染成为：
+
+```javascript
+<p class="foo bar active">Hi</p>
+```
+
+### [3.6.2 绑定内联样式](https://cn.vuejs.org/v2/guide/class-and-style.html#%E7%BB%91%E5%AE%9A%E5%86%85%E8%81%94%E6%A0%B7%E5%BC%8F)
+
+#### [1. 对象语法](#对象语法-1 "对象语法")
+
+`v-bind:style` 的对象语法十分直观——看着非常像 CSS，但其实是一个 JavaScript 对象。CSS 属性名可以用驼峰式 (camelCase) 或短横线分隔 (kebab-case，记得用引号括起来) 来命名：
+
+```javascript
+<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+```
+
+```javascript
+data: {
+  activeColor: 'red',
+  fontSize: 30
+}
+```
+
+直接绑定到一个样式对象通常更好，这会让模板更清晰：
+
+```javascript
+<div v-bind:style="styleObject"></div>
+```
+
+```javascript
+data: {
+  styleObject: {
+    color: 'red',
+    fontSize: '13px'
+  }
+}
+```
+
+同样的，对象语法常常结合返回对象的计算属性使用。
+
+#### [2. 数组语法](#数组语法-1 "数组语法")
+
+`v-bind:style` 的数组语法可以将多个样式对象应用到同一个元素上：
+
+```javascript
+<div v-bind:style="[baseStyles, overridingStyles]"></div>
+```
+
+#### [3. 自动添加前缀](#自动添加前缀 "自动添加前缀")
+
+当 `v-bind:style` 使用需要添加[浏览器引擎前缀](https://developer.mozilla.org/zh-CN/docs/Glossary/Vendor_Prefix)的 CSS 属性时，如 `transform`，Vue.js 会自动侦测并添加相应的前缀。
+
+#### [4. 多重值](#多重值 "多重值")
+
+> 2.3.0+
+
+从 2.3.0 起你可以为 `style` 绑定中的属性提供一个包含多个值的数组，常用于提供多个带前缀的值，例如：
+
+```javascript
+<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
+```
+
+这样写只会渲染数组中最后一个被浏览器支持的值。在本例中，如果浏览器支持不带浏览器前缀的 flexbox，那么就只会渲染 `display: flex`。
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> 对象绑定、数组绑定
 
 ## 3.7 Vue中的条件渲染
 
-
+ 
 
 
 
@@ -851,3 +1017,15 @@ Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使�
 
 
 ## 3.12 （新）章节小节
+
+
+
+
+
+
+
+
+
+
+
+> 

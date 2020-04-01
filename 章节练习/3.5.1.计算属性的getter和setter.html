@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算属性的getter和setter</title>
+</head>
+<body>
+    <div id="app">
+        {{fullName}}
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                firstName: "Dell",
+                lastName: "Lee"
+            },
+            // computed: {
+            //     fullName: function(){
+            //         return this.firstName + ' ' + this.lastName
+            //     }
+            // },
+            // computed 依赖的值发生变化的时候才会重新计算
+            computed: {
+                fullName: {
+                    get: function(){
+                        return this.firstName + ' ' + this.lastName
+                        console.log("取值的时候执行")
+                    },
+                    // set 能够接受外部传入的 Value
+                    set: function(value){
+                        var arr = value.split(" ");
+                        this.firstName = arr[0]
+                        this.lastName = arr[1]
+                        console.log(value)
+                        console.log("设置 fullName 值的时候执行")
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

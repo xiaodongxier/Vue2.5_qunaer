@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue中的条件渲染</title>
+</head>
+<body>
+    <div id="app">
+        <div v-if="show">{{message}}</div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                show: false,
+                message: "hello world"
+            }
+        })
+    </script>
+</body>
+</html>

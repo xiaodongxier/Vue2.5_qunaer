@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue中的样式绑定</title>
+    <style>
+        .activated {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div :class="[activated,activatedOne]" 
+             @click="handDivClick">hello world
+        </div>
+    </div>
+
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                activated: "",
+                activatedOne: "activated-one"
+            },
+            methods: {
+                handDivClick: function(){
+                    // if(this.activated === "activated") {
+                    //     this.activated = ""
+                    // } else {
+                    //     this.activated = "activated"
+                    // }
+                    this.activated = this.activated === "activated" ? "" : "activated"
+                }
+            }
+        })
+    </script>
+</body>
+</html> 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue中的样式绑定</title>
+</head>
+<body>
+    <div id="app">
+        <div :style="styleObj"
+             @click="handleDivClick">hello world</div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                styleObj: {
+                    color:"black",
+                    backgroundColor: "pink"
+                }
+            },
+            methods: {
+                handleDivClick: function(){
+                    this.styleObj.color = this.styleObj.color === "black" ? "red" : "black"
+                }
+            }
+        })
+    </script>
+</body>
+</html> 
