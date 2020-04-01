@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>Vue中的列表渲染</title>
+</head>
+<body>
+    <div id="app">
+        <!-- in 与 of 都可以 -->
+        <!-- <div v-for="item in list">{{item}}</div> -->
+        <div v-for="(item,index) of list">
+            {{item}} --- {{index}}
+        </div>
+    </div>
+
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [
+                    "hello",
+                    "Jie",
+                    "nice",
+                    "to",
+                    "meet",
+                    "you"
+                ]
+            }
+        })
+    </script>
+</body>
+</html>

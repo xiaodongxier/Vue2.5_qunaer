@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>Vue中的列表渲染</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 使用 :key="index" 比 :key="item.id"后端返的 id 性能要高 -->
+        <div v-for="(item,index) of list" 
+             :key="item.id">
+            {{item.text}} --- {{item.id}}
+        </div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [{
+                    id: "001",
+                    text:"wang"
+                },{
+                    id: "002",
+                    text:"yong"
+                },{
+                    id: "003",
+                    text:"jie"
+                }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>

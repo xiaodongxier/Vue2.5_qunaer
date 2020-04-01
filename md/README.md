@@ -828,60 +828,233 @@ data: {
 
 这样写只会渲染数组中最后一个被浏览器支持的值。在本例中，如果浏览器支持不带浏览器前缀的 flexbox，那么就只会渲染 `display: flex`。
 
-
 > 对象绑定、数组绑定
 
-## 3.7 Vue中的条件渲染
+## 3.7 [Vue中的条件渲染](https://cn.vuejs.org/v2/guide/conditional.html)
 
- 
+### 3.7.1 视频教程笔记
 
+> 视频教程笔记
 
+**v-if 、v-else 、v-show**
 
-
-
-
-
-
-
-
-
+v-if=false  DOM节点不存在，每次操作都是删除 DOM 节点和添加 DOM 节点
+v-show=false  DOM节点是存在的只是 display:none; 
+如果频繁切换显示/隐藏，v-show 性能更高，因为无需频繁添加 DOM 节点
+v-if 与 v-else 和 v-else-if 需要紧贴在一起使用, 否则会报错
 
 
 
+**关于 key 值**
+
+Vue在重新渲染页面的时候，他会尽力去复用页面已经存在的 DOM，它的机制会尽力复用页面中已经存在的 DOM
+
+当给某个标签加入 key 值得时候，Vue会知道他是页面上唯一的元素，如果两个元素 key 值不一样，Vue 不会尝试去复用（虚拟 DOM 中的一个内容）
+
+加入 key 值能解决其中的 bug
 
 
 
+> 官网文档笔记
 
 
+### 3.7.2 [`v-if`](#v-if "v-if")
+
+[观看本节视频讲解](https://learning.dcloud.io/#/?vid=8 "Vue.js 教程 - 条件渲染")
+
+`v-if` 指令用于条件性地渲染一块内容。这块内容只会在指令的表达式返回 truthy 值的时候被渲染。
+
+```javascript
+<h1 v-if="awesome">Vue is awesome!</h1>
+```
+
+也可以用 `v-else` 添加一个“else 块”：
+
+```javascript
+<h1 v-if="awesome">Vue is awesome!</h1>
+<h1 v-else>Oh no 😢</h1>
+```
+
+#### [1. 在 `<template>` 元素上使用 `v-if` 条件渲染分组](#在-lt-template-gt-元素上使用-v-if-条件渲染分组 "在 <template> 元素上使用 v-if 条件渲染分组")
+
+因为 `v-if` 是一个指令，所以必须将它添加到一个元素上。但是如果想切换多个元素呢？此时可以把一个 `<template>` 元素当做不可见的包裹元素，并在上面使用 `v-if`。最终的渲染结果将不包含 `<template>` 元素。
+
+```javascript
+<template v-if="ok">
+  <h1>Title</h1>
+  <p>Paragraph 1</p>
+  <p>Paragraph 2</p>
+</template>
+```
+
+#### [2. `v-else`](#v-else "v-else")
+
+你可以使用 `v-else` 指令来表示 `v-if` 的“else 块”：
+
+```javascript
+<div v-if="Math.random() > 0.5">
+  Now you see me
+</div>
+<div v-else>
+  Now you don't
+</div>
+```
+
+`v-else` 元素必须紧跟在带 `v-if` 或者 `v-else-if` 的元素的后面，否则它将不会被识别。
+
+#### [3. `v-else-if`](#v-else-if "v-else-if")
+
+> 2.1.0 新增
+
+`v-else-if`，顾名思义，充当 `v-if` 的“else-if 块”，可以连续使用：
+
+```javascript
+<div v-if="type === 'A'">
+  A
+</div>
+<div v-else-if="type === 'B'">
+  B
+</div>
+<div v-else-if="type === 'C'">
+  C
+</div>
+<div v-else>
+  Not A/B/C
+</div>
+```
+
+类似于 `v-else`，`v-else-if` 也必须紧跟在带 `v-if` 或者 `v-else-if` 的元素之后。
+
+#### [4. 用 `key` 管理可复用的元素](#用-key-管理可复用的元素 "用 key 管理可复用的元素")
+
+Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做除了使 Vue 变得非常快之外，还有其它一些好处。例如，如果你允许用户在不同的登录方式之间切换：
+
+```javascript
+<template v-if="loginType === 'username'">
+  <label>Username</label>
+  <input placeholder="Enter your username">
+</template>
+<template v-else>
+  <label>Email</label>
+  <input placeholder="Enter your email address">
+</template>
+```
+
+那么在上面的代码中切换 `loginType` 将不会清除用户已经输入的内容。因为两个模板使用了相同的元素，`<input>` 不会被替换掉——仅仅是替换了它的 `placeholder`。
+
+自己动手试一试，在输入框中输入一些文本，然后按下切换按钮：
+
+![key](http://oss.xiaodongxier.com/blog/static/gif/20200401160352.gif?imageView2/0/interlace/1/q/70|watermark/2/text/eGlhb2Rvbmd4aWVyLmNvbQ==/font/YXJpYWw=/fontsize/600/fill/IzUxQURFRA==/dissolve/100/gravity/SouthEast/dx/0/dy/0)
 
 
+这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来表达“这两个元素是完全独立的，不要复用它们”。只需添加一个具有唯一值的 `key` 属性即可：
+
+```javascript
+<template v-if="loginType === 'username'">
+  <label>Username</label>
+  <input placeholder="Enter your username" key="username-input">
+</template>
+<template v-else>
+  <label>Email</label>
+  <input placeholder="Enter your email address" key="email-input">
+</template>
+```
+
+现在，每次切换时，输入框都将被重新渲染。请看：
+
+![key](http://oss.xiaodongxier.com/blog/static/gif/20200401160611.gif?imageView2/0/interlace/1/q/70|watermark/2/text/eGlhb2Rvbmd4aWVyLmNvbQ==/font/YXJpYWw=/fontsize/600/fill/IzUxQURFRA==/dissolve/100/gravity/SouthEast/dx/0/dy/0)
+
+注意，`<label>` 元素仍然会被高效地复用，因为它们没有添加 `key` 属性。
+
+### 3.7.3 [`v-show`](#v-show "v-show")
+
+另一个用于根据条件展示元素的选项是 `v-show` 指令。用法大致一样：
+
+```javascript
+<h1 v-show="ok">Hello!</h1>
+```
+
+不同的是带有 `v-show` 的元素始终会被渲染并保留在 DOM 中。`v-show` 只是简单地切换元素的 CSS 属性 `display`。
+
+注意，`v-show` 不支持 `<template>` 元素，也不支持 `v-else`。
+
+### 3.7.4 [`v-if` vs `v-show`](#v-if-vs-v-show "v-if vs v-show")
+
+`v-if` 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+
+`v-if` 也是**惰性的**：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+
+相比之下，`v-show` 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
+
+一般来说，`v-if` 有更高的切换开销，而 `v-show` 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 `v-show` 较好；如果在运行时条件很少改变，则使用 `v-if` 较好。
+
+### 3.7.5 [`v-if` 与 `v-for` 一起使用](#v-if-与-v-for-一起使用 "v-if 与 v-for 一起使用")
+
+**不推荐**同时使用 `v-if` 和 `v-for`。请查阅[风格指南](https://cn.vuejs.org/v2/style-guide/#避免-v-if-和-v-for-用在一起-必要)以获取更多信息。
+
+当 `v-if` 与 `v-for` 一起使用时，`v-for` 具有比 `v-if` 更高的优先级。请查阅[列表渲染指南](https://cn.vuejs.org/v2/guide/list.html#v-for-with-v-if) 以获取详细信息。
+
+## 3.8 [Vue中的列表渲染](https://cn.vuejs.org/v2/guide/list.html)
+
+**key 值的使用**
+
+在使用 key 值得时候，每个循环项上最好都带一个 key 值，提高性能
+
+key值唯一，并且尽量不要使用它的 index 作为 key 值，能使性能达到最优
 
 
+**数组变异方法**
 
+> push pop shift unshift splice sore  reverse
 
+直接操作下标形式改变数据，数据变了，但是页面是不会跟着变得
+所以如果需要改变数据中的数组数据，那必须通过变异方法来进行修改
 
+```html
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>Vue中的列表渲染</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 使用 :key="index" 比 :key="item.id"后端返的 id 性能要高 -->
+        <div v-for="(item,index) of list" 
+             :key="item.id">
+            {{item.text}} --- {{item.id}}
+        </div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [{
+                    id: "001",
+                    text:"wang"
+                },{
+                    id: "002",
+                    text:"yong"
+                },{
+                    id: "003",
+                    text:"jie"
+                }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
+以上案例控制台通过 `app.list[0] = {id:"0001",text:"newWang"}` 进行修改数据，页面是无效的
 
+必须通过数组变异方法进行修改 `app.list.splice(1,1,{id:"0001",text:"newWang"})`
 
-
-
-
-
-
-## 3.8 Vue中的列表渲染
-
-
-
-
-
-
-
-
-
-
-
-
-
+**改变引用**
 
 
 

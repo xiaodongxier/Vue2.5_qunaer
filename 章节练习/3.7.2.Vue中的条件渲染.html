@@ -7,16 +7,17 @@
 </head>
 <body>
     <div id="app">
-        <div v-if="show" data-test="v-if">{{message}}</div>
-        <div v-else data-test="v-else">v-else</div>
-        <div v-show="show" data-test="v-show">{{message}}</div>
+        <div v-if="show==='a'">this is A</div>
+        <div v-else-if="show==='b'">this is B</div>
+        <div v-else="show==='c'">this is others</div>
+
     </div>
     <script src="../static/vue/vue.js"></script>
     <script>
         var app = new Vue({
             el:"#app",
             data: {
-                show: false,
+                show: "a",
                 message: "hello world"
             }
         })
