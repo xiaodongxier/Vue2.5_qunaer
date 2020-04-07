@@ -1001,7 +1001,7 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
 在使用 key 值得时候，每个循环项上最好都带一个 key 值，提高性能
 
 key值唯一，并且尽量不要使用它的 index 作为 key 值，能使性能达到最优
-
+ 
 
 **数组变异方法**
 
@@ -1056,25 +1056,153 @@ key值唯一，并且尽量不要使用它的 index 作为 key 值，能使性�
 
 **改变引用**
 
+```html
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>Vue中的列表渲染</title>
+</head>
+<body>
+    <div id="app">
+        <div v-for="(item,index) of list" 
+             :key="item.id">
+            {{item.text}} --- {{item.id}}
+        </div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [{
+                    id: "001",
+                    text:"wang"
+                },{
+                    id: "002",
+                    text:"yong"
+                },{
+                    id: "003",
+                    text:"jie"
+                }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
+控制台输入以下内容回车，进行引用的改变，页面数据也发生改变
 
+```javascript
+app.list = [{
+      id: "001",
+      text:"wang"
+  },{
+      id: "002-2",
+      text:"yong"
+  },{
+      id: "003",
+      text:"jie"
+  }
+]
+```
 
+**template模板占位符**
 
+> 单个数据进行多处循环的时候可以使用
+> template模板占位符，循环数据的时候进行包裹元素，但是本身不会显示到页面上
 
+正常这个样子会在外部多一个包裹的 `div` 元素
 
+```html
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>template模板占位符</title>
+</head>
+<body>
+    <div id="app">
+        <div v-for="(item,index) of list" 
+             :key="item.id">
+            <div>{{item.text}}</div>
+            <span>{{item.id}}</span>
+        </div>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [{
+                    id: "001",
+                    text:"wang"
+                },{
+                    id: "002",
+                    text:"yong"
+                },{
+                    id: "003",
+                    text:"jie"
+                }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
+![](http://oss.xiaodongxier.com/blog/image/20200407105959.png?imageView2/0/interlace/1/q/70|watermark/2/text/eGlhb2Rvbmd4aWVyLmNvbQ==/font/YXJpYWw=/fontsize/600/fill/IzUxQURFRA==/dissolve/100/gravity/SouthEast/dx/10/dy/5)
 
+如果要去掉这个 `div` 的包裹元素需要使用 `template模板占位符`
 
+```html
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://oss.xiaodongxier.com/blog/image/logo.png" type="image/x-icon">
+    <title>template模板占位符</title>
+</head>
+<body>
+    <div id="app">
+        <template v-for="(item,index) of list" 
+             :key="item.id">
+            <div>{{item.text}}</div>
+            <span>{{item.id}}</span>
+        </template>
+    </div>
+    <script src="../static/vue/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                list: [{
+                    id: "001",
+                    text:"wang"
+                },{
+                    id: "002",
+                    text:"yong"
+                },{
+                    id: "003",
+                    text:"jie"
+                }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
-
-
-
-
-
-
-
-
-
+![](http://oss.xiaodongxier.com/blog/image/20200407105855.png?imageView2/0/interlace/1/q/70|watermark/2/text/eGlhb2Rvbmd4aWVyLmNvbQ==/font/YXJpYWw=/fontsize/600/fill/IzUxQURFRA==/dissolve/100/gravity/SouthEast/dx/10/dy/5)
 
 
 
