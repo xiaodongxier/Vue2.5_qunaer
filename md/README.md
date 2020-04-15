@@ -996,14 +996,14 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
 
 ## 3.8 [Vue中的列表渲染](https://cn.vuejs.org/v2/guide/list.html)
 
-**key 值的使用**
+### 3.8.1 key 值的使用
 
 在使用 key 值得时候，每个循环项上最好都带一个 key 值，提高性能
 
 key值唯一，并且尽量不要使用它的 index 作为 key 值，能使性能达到最优
  
 
-**数组变异方法**
+### 3.8.2 数组变异方法
 
 > push pop shift unshift splice sore  reverse
 
@@ -1054,7 +1054,7 @@ key值唯一，并且尽量不要使用它的 index 作为 key 值，能使性�
 
 必须通过数组变异方法进行修改 `app.list.splice(1,1,{id:"0001",text:"newWang"})`
 
-**改变引用**
+### 3.8.3 改变引用
 
 ```html
 <!DOCTYPE html>
@@ -1111,7 +1111,7 @@ app.list = [{
 ]
 ```
 
-**template模板占位符**
+### 3.8.4 template模板占位符
 
 > 单个数据进行多处循环的时候可以使用
 > template模板占位符，循环数据的时候进行包裹元素，但是本身不会显示到页面上

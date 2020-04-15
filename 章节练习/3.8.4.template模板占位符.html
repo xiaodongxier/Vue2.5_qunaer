@@ -8,11 +8,11 @@
 </head>
 <body>
     <div id="app">
-        <div v-for="(item,index) of list" 
-             :key="item.id">
+        <template v-for="(item,index) of list" 
+                :key="item.id">
             <div>{{item.text}}</div>
             <span>{{item.id}}</span>
-        </div>
+        </template>
     </div>
     <script src="../static/vue/vue.js"></script>
     <script>
